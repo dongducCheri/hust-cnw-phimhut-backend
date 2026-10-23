@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
-
   namespace :api do
     namespace :v1 do
       get "test", to: "test#index"
@@ -14,6 +13,8 @@ Rails.application.routes.draw do
     #Genres
       resources :genres, only: [:index, :show]
     
+    #Movies
+      resources :movies, only: [:index, :show]
     end
   end
 end
