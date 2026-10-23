@@ -10,6 +10,10 @@ Rails.application.routes.draw do
       post "login", to: "sessions#create"
       post "logout", to: "sessions#destroy"
       get "me", to: "sessions#me"
+
+    #Genres
+      resources :genres, only: [:index, :show]
+    
     end
   end
 end
