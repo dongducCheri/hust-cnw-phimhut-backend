@@ -15,8 +15,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_205852) do
   enable_extension "pg_catalog.plpgsql"
 
   create_table "episodes", force: :cascade do |t|
+    t.bigint "movie_id", null: false
+    t.integer "season_number", default: 1, null: false
+    t.integer "episode_number", null: false
+    t.string "title", null: false
+    t.integer "duration"
+    t.string "video_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_episodes_on_movie_id"
   end
 
   create_table "genres", force: :cascade do |t|
@@ -96,6 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_205852) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "episodes", "movies"
   add_foreign_key "movie_credits", "movies"
   add_foreign_key "movie_credits", "people"
   add_foreign_key "movie_genres", "genres"
