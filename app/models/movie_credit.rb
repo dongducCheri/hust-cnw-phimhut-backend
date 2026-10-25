@@ -1,0 +1,2 @@
+class MovieCredit < ApplicationRecord
+end
