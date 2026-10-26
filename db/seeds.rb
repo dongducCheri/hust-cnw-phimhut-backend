@@ -1,4 +1,4 @@
-# --- SEED USERS ---
+﻿# --- SEED USERS ---
 puts "1. Seeding users..."
 admin = User.find_or_initialize_by(email: "admin@phimhut.com")
 admin.update!(
@@ -971,8 +971,109 @@ movies_data.each do |data|
   movie.genres = selected_genres
 end
 
-puts "Done! Seeded successfully:"
+# --- 4. SEED PEOPLE & CREDITS (DIEN VIEN & DAO DIEN) ---
+puts "4. Seeding people & movie credits..."
+
+people_data = [
+  { name: "Anthony Russo", tmdb_person_id: 19271, profile_url: "https://image.tmdb.org/t/p/w200/tc0hT9wT1pXyFmQzP61a4n7J61B.jpg" },
+  { name: "Joe Russo", tmdb_person_id: 19272, profile_url: "https://image.tmdb.org/t/p/w200/jZc8o4YlM7qP8G3A7c91D61k72C.jpg" },
+  { name: "Christopher Nolan", tmdb_person_id: 525, profile_url: "https://image.tmdb.org/t/p/w200/xuAIuYSmsUzKlUMBFGVZaWsY3Z5.jpg" },
+  { name: "Bong Joon-ho", tmdb_person_id: 21684, profile_url: "https://image.tmdb.org/t/p/w200/10gAkg7a25j4F58W714C8k81K.jpg" },
+  { name: "Vince Gilligan", tmdb_person_id: 66633, profile_url: "https://image.tmdb.org/t/p/w200/rL66A3X4b9k71F7wP91a4c9.jpg" },
+
+  { name: "Robert Downey Jr.", tmdb_person_id: 3223, profile_url: "https://image.tmdb.org/t/p/w200/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg" },
+  { name: "Chris Evans", tmdb_person_id: 16828, profile_url: "https://image.tmdb.org/t/p/w200/3bOGNsHlrswhyW79uvIHH1V43JI.jpg" },
+  { name: "Scarlett Johansson", tmdb_person_id: 1245, profile_url: "https://image.tmdb.org/t/p/w200/6NsMbJXRlDZuDzatQT8rq49a6.jpg" },
+  { name: "Matthew McConaughey", tmdb_person_id: 10297, profile_url: "https://image.tmdb.org/t/p/w200/wDeL9b0FpE2e71J8Kk62D.jpg" },
+  { name: "Anne Hathaway", tmdb_person_id: 1813, profile_url: "https://image.tmdb.org/t/p/w200/tLsplEgOOcasFMB95g1.jpg" },
+  { name: "Song Kang-ho", tmdb_person_id: 20738, profile_url: "https://image.tmdb.org/t/p/w200/f83827FqM91aK3829L98k.jpg" },
+  { name: "Bryan Cranston", tmdb_person_id: 17419, profile_url: "https://image.tmdb.org/t/p/w200/7Jahy5LZX2Fo4fGJltMgnAI.jpg" },
+  { name: "Aaron Paul", tmdb_person_id: 84497, profile_url: "https://image.tmdb.org/t/p/w200/8pK7192KaM971L03K8k.jpg" }
+]
+
+people = {}
+people_data.each do |p_data|
+  person = Person.find_or_initialize_by(name: p_data[:name])
+  person.update!(p_data)
+  people[p_data[:name]] = person
+end
+
+# Gan vao Avengers: Hoi Ket
+avengers = Movie.find_by(title: "Avengers: Hồi Kết")
+if avengers
+  MovieCredit.find_or_create_by!(movie: avengers, person: people["Anthony Russo"], credit_type: :crew, job: "Đạo diễn")
+  MovieCredit.find_or_create_by!(movie: avengers, person: people["Joe Russo"], credit_type: :crew, job: "Đạo diễn")
+  MovieCredit.find_or_create_by!(movie: avengers, person: people["Robert Downey Jr."], credit_type: :cast, character_name: "Tony Stark / Iron Man", order_index: 0)
+  MovieCredit.find_or_create_by!(movie: avengers, person: people["Chris Evans"], credit_type: :cast, character_name: "Steve Rogers / Captain America", order_index: 1)
+  MovieCredit.find_or_create_by!(movie: avengers, person: people["Scarlett Johansson"], credit_type: :cast, character_name: "Natasha Romanoff / Black Widow", order_index: 2)
+end
+
+# Gan vao Ho Den Tu Than
+interstellar = Movie.find_by(title: "Hố Đen Tử Thần")
+if interstellar
+  MovieCredit.find_or_create_by!(movie: interstellar, person: people["Christopher Nolan"], credit_type: :crew, job: "Đạo diễn & Biên kịch")
+  MovieCredit.find_or_create_by!(movie: interstellar, person: people["Matthew McConaughey"], credit_type: :cast, character_name: "Joseph Cooper", order_index: 0)
+  MovieCredit.find_or_create_by!(movie: interstellar, person: people["Anne Hathaway"], credit_type: :cast, character_name: "Dr. Amelia Brand", order_index: 1)
+end
+
+# --- 5. SEED TAP PHIM (SERIES EPISODES) ---
+puts "5. Seeding episodes for series movies..."
+
+series_movies = Movie.where(movie_type: :series)
+sample_videos = [
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+]
+
+series_movies.each do |series|
+  (1..6).each do |ep_num|
+    Episode.find_or_create_by!(
+      movie: series,
+      season_number: 1,
+      episode_number: ep_num
+    ) do |ep|
+      ep.title = "Tập #{ep_num}: Diễn biến kịch tính"
+      ep.duration = 45 + ep_num * 3
+      ep.video_url = sample_videos[(ep_num - 1) % sample_videos.length]
+    end
+  end
+end
+
+# --- 6. SEED WATCHLISTS CHO USER ---
+puts "6. Seeding watchlists for user..."
+
+normal_user = User.find_by(email: "dongxuanduc2005@gmail.com")
+if normal_user
+  all_movies = Movie.where(is_published: true).limit(9)
+
+  # 3 phim Dang xem
+  all_movies[0..2].each do |m|
+    w = Watchlist.find_or_initialize_by(user: normal_user, movie: m)
+    w.update!(status: :watching)
+  end
+
+  # 3 phim Mong muon
+  all_movies[3..5].each do |m|
+    w = Watchlist.find_or_initialize_by(user: normal_user, movie: m)
+    w.update!(status: :plan_to_watch)
+  end
+
+  # 3 phim Da xem xong
+  all_movies[6..8].each do |m|
+    w = Watchlist.find_or_initialize_by(user: normal_user, movie: m)
+    w.update!(status: :completed)
+  end
+end
+
+puts "
+🎉 Done! Seeded successfully:"
 puts "- Users: #{User.count}"
 puts "- Genres: #{Genre.count}"
 puts "- Movies: #{Movie.count}"
-puts "- MovieGenres: #{MovieGenre.count}"
+puts "- People (Cast & Crew): #{Person.count}"
+puts "- MovieCredits: #{MovieCredit.count}"
+puts "- Episodes: #{Episode.count}"
+puts "- Watchlists: #{Watchlist.count}"

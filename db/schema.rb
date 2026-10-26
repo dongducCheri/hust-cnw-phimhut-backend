@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_205852) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_081354) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -103,9 +103,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_205852) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "watchlists", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "movie_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_watchlists_on_movie_id"
+    t.index ["user_id", "movie_id"], name: "index_watchlists_on_user_id_and_movie_id", unique: true
+    t.index ["user_id", "status"], name: "index_watchlists_on_user_id_and_status"
+    t.index ["user_id"], name: "index_watchlists_on_user_id"
+  end
+
   add_foreign_key "episodes", "movies"
   add_foreign_key "movie_credits", "movies"
   add_foreign_key "movie_credits", "people"
   add_foreign_key "movie_genres", "genres"
   add_foreign_key "movie_genres", "movies"
+  add_foreign_key "watchlists", "movies"
+  add_foreign_key "watchlists", "users"
 end
