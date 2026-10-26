@@ -8,4 +8,7 @@ class Movie < ApplicationRecord
 
   has_many :movie_genres, dependent: :destroy
   has_many :genres, through: :movie_genres
+  has_many :movie_credits, -> { order(order_index: :asc) }, dependent: :destroy
+  has_many :people, through: :movie_credits
+  has_many :episodes, -> { order(season_number: :asc, episode_number: :asc) }, dependent: :destroy
 end

@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_23_083723) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_205852) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "episodes", force: :cascade do |t|
+    t.bigint "movie_id", null: false
+    t.integer "season_number", default: 1, null: false
+    t.integer "episode_number", null: false
+    t.string "title", null: false
+    t.integer "duration"
+    t.string "video_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_episodes_on_movie_id"
+  end
 
   create_table "genres", force: :cascade do |t|
     t.integer "tmdb_genre_id"
@@ -23,6 +35,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_083723) do
     t.index ["name"], name: "index_genres_on_name", unique: true
     t.index ["slug"], name: "index_genres_on_slug", unique: true
     t.index ["tmdb_genre_id"], name: "index_genres_on_tmdb_genre_id", unique: true
+  end
+
+  create_table "movie_credits", force: :cascade do |t|
+    t.bigint "movie_id", null: false
+    t.bigint "person_id", null: false
+    t.integer "credit_type", default: 0, null: false
+    t.string "job"
+    t.string "character_name"
+    t.integer "order_index", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["movie_id"], name: "index_movie_credits_on_movie_id"
+    t.index ["person_id"], name: "index_movie_credits_on_person_id"
   end
 
   create_table "movie_genres", force: :cascade do |t|
@@ -55,6 +80,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_083723) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "people", force: :cascade do |t|
+    t.integer "tmdb_person_id"
+    t.string "name", null: false
+    t.string "profile_url"
+    t.integer "gender"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest", null: false
@@ -69,6 +103,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_23_083723) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "episodes", "movies"
+  add_foreign_key "movie_credits", "movies"
+  add_foreign_key "movie_credits", "people"
   add_foreign_key "movie_genres", "genres"
   add_foreign_key "movie_genres", "movies"
 end
