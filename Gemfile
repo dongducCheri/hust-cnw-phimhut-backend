@@ -52,3 +52,8 @@ end
 gem "pagy", "~> 9.4"
 
 gem "alba", "~> 4.0"
+
+# Gọi HTTP API bên ngoài
+gem "httparty", ">= 0.24.3"
+
+gem "dotenv-rails", groups: [:development, :test]
