@@ -1,11 +1,5 @@
-class MovieDetailSerializer
-  include Alba::Resource
-
-  attributes :id, :title, :original_title, :movie_type, :release_year,
-  :country, :duration, :vote_average, :vote_count, :age_rating,
-  :poster_url, :banner_url, :overview, :trailer_url, :video_url
-
-  many :genres, resource: GenreSerializer
+class MovieDetailSerializer < MovieSummarySerializer
+  attributes :vote_count, :age_rating, :overview, :trailer_url, :video_url
   many :episodes, resource: EpisodeSerializer
 
   attribute :creators do |movie|

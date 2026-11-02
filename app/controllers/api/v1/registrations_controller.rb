@@ -7,13 +7,7 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
     if user.save
       render json: {
         api_token: user.api_token,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          balance: user.balance
-        }
+        user: UserSerializer.new(user).serializable_hash
       }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
