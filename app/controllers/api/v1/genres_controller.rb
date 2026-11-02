@@ -10,9 +10,9 @@ class Api::V1::GenresController < Api::V1::BaseController
   end
 
   # GET /api/v1/genres/:id
-  def show
+  def show 
     genre = Genre.find_by(id: params[:id]) || Genre.find_by(slug: params[:id])
-    if genre 
+    if genre
       render json: {
         id: genre.id,
         name: genre.name,
