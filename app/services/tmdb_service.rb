@@ -1,5 +1,6 @@
 class TmdbService 
-  include HTTParty 
+  include HTTParty
+  #Gốc đường dẫn chung tất cả dịch vụ trên TMDb
   base_uri "https://api.themoviedb.org/3"
 
   IMAGE_BASE_URL = "https://image.tmdb.org/t/p"

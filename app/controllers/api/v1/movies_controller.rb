@@ -3,9 +3,9 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   # GET /api/v1/movies
   def index
-    movies_relation = MoviesQuery.new(params).call.distinct
+    movies_relation = MoviesQuery.new(params).call.includes(:genres).distinct
     pagy, paginated_movies = pagy(movies_relation)
-
+  
     render json: {
       total: pagy.count,
       total_pages: pagy.pages,
@@ -18,7 +18,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
   # GET /api/v1/movies/:id
   def show
     movie = Movie.includes(:genres, :episodes, movie_credits: :person).where(is_published: true).find_by(id: params[:id])
-    if movie
+    if movie 
       render json: MovieDetailSerializer.new(movie).serializable_hash, status: :ok
     else
       render json: { error: "Movie not found" }, status: :not_found
