@@ -62,3 +62,6 @@ gem "alba", "~> 4.0"
 gem "httparty", ">= 0.24.3"
 
 gem "dotenv-rails", groups: [:development, :test]
+
+#  (Cloudflare R2 / AWS S3)
+gem "aws-sdk-s3", require: false
