@@ -6,13 +6,7 @@ class Api::V1::SessionsController < Api::V1::BaseController
     if user&.authenticate(params[:password])
       render json: { 
         api_token: user.api_token,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          balance: user.balance
-        }
+        user: UserSerializer.new(user).serializable_hash
       }, status: :ok
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
@@ -21,13 +15,7 @@ class Api::V1::SessionsController < Api::V1::BaseController
 
   #GET /api/v1/me 
   def me
-    render json: {
-      id: current_user.id,
-      email: current_user.email,
-      name: current_user.name,
-      role: current_user.role,
-      balance: current_user.balance
-    }, status: :ok
+    render json: UserSerializer.new(current_user).serializable_hash
   end
 
   #POST /api/v1/logout 
