@@ -8,7 +8,12 @@ class MovieImporterService
     return { success: false, message: "Movie not found in TMDB" } unless data
 
     # 1. Tìm trailer YouTube
-    trailer_key = data.dig("videos", "results")&.find { |v| v["site"] == "YouTube" && (v["type"] == "Trailer" || v["type"] == "Teaser") }&.dig("key")
+      # 1. Đi vào key "videos" -> "results"
+      # 2. Tìm trailer YouTube phù hợp
+      # 3. Lấy giá trị trường "key"
+    trailer_key = data.dig("videos", "results")
+                  &.find { |v| v["site"] == "YouTube" && (v["type"] == "Trailer" || v["type"] == "Teaser") }
+                  &.dig("key")
     trailer_url = trailer_key ? "https://www.youtube.com/watch?v=#{trailer_key}" : nil
 
     # 2. Lưu hoặc cập nhật Movie
