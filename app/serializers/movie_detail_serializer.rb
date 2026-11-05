@@ -1,5 +1,5 @@
 class MovieDetailSerializer < MovieSummarySerializer
-  attributes :vote_count, :age_rating, :overview, :trailer_url, :video_url
+  attributes :vote_count, :age_rating, :overview, :trailer_url
   many :episodes, resource: EpisodeSerializer
 
   attribute :creators do |movie|

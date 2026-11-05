@@ -8,7 +8,12 @@ class MovieImporterService
     return { success: false, message: "Movie not found in TMDB" } unless data
 
     # 1. Tìm trailer YouTube
-    trailer_key = data.dig("videos", "results")&.find { |v| v["site"] == "YouTube" && (v["type"] == "Trailer" || v["type"] == "Teaser") }&.dig("key")
+      # 1. Đi vào key "videos" -> "results"
+      # 2. Tìm trailer YouTube phù hợp
+      # 3. Lấy giá trị trường "key"
+    trailer_key = data.dig("videos", "results")
+                  &.find { |v| v["site"] == "YouTube" && (v["type"] == "Trailer" || v["type"] == "Teaser") }
+                  &.dig("key")
     trailer_url = trailer_key ? "https://www.youtube.com/watch?v=#{trailer_key}" : nil
 
     # 2. Lưu hoặc cập nhật Movie
@@ -19,16 +24,19 @@ class MovieImporterService
       overview: data["overview"],
       movie_type: :single_movie,
       release_year: data["release_date"]&.split("-")&.first&.to_i,
-      country: data.dig("origin_country", 0) || "US",
+      country: data.dig("origin_country", 0),
       duration: data["runtime"],
-      vote_average: data["vote_average"]&.round(1) || 0.0,
+      vote_average: data["vote_average"]&.round(1),
       vote_count: data["vote_count"] || 0,
       poster_url: TmdbService.image_url(data["poster_path"], "w500"),
       banner_url: TmdbService.image_url(data["backdrop_path"], "original"),
       trailer_url: trailer_url,
-      video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", # video mẫu
       is_published: true
     )
+    Episode.find_or_create_by!(movie: movie, season_number: 1, episode_number: 1) do |ep|
+      ep.title = "Full Movie"
+      ep.duration = data["runtime"]
+    end
 
     # 3. Gắn thể loại Genres
     if data["genres"].present?
