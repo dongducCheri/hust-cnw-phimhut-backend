@@ -7,8 +7,10 @@ class Episode < ApplicationRecord
 
   has_one_attached :video 
 
-  def stream_url 
-    return nil if video_url.blank?
-    "#{ENV.fetch('R2_PUBLIC_URL')}/#{video_url}"
+  def stream_url
+    return nil if object_key.blank?
+    return object_key if object_key.start_with?("http://", "https://")
+
+    "#{ENV.fetch('R2_PUBLIC_URL').chomp('/')}/#{object_key.sub(%r{\A/}, '')}"
   end
 end
