@@ -69,6 +69,7 @@ class HlsVideoService
   end
 
   def upload_directory_to_r2!
+    # Khởi tạo 
     s3_client = Aws::S3::Client.new(
       access_key_id: ENV.fetch("R2_ACCESS_KEY_ID"),
       secret_access_key: ENV.fetch("R2_SECRET_ACCESS_KEY"),
