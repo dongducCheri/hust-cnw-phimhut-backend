@@ -12,4 +12,5 @@ class Movie < ApplicationRecord
   has_many :people, through: :movie_credits
   has_many :episodes, -> { order(season_number: :asc, episode_number: :asc) }, dependent: :destroy
   has_many :watchlists, dependent: :destroy
+  has_many :comments, dependent: :destroy
 end
