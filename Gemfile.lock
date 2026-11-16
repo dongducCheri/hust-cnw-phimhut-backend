@@ -298,6 +298,10 @@ GEM
       prism (>= 1.6.0)
       rbs (>= 4.0.0)
       tsort
+    redis (5.4.1)
+      redis-client (>= 0.22.0)
+    redis-client (0.31.0)
+      connection_pool
     regexp_parser (2.13.1)
     reline (0.7.0)
       io-console (~> 0.5)
@@ -335,6 +339,12 @@ GEM
       ffi (~> 1.12)
       logger
     securerandom (0.4.1)
+    sidekiq (7.3.9)
+      base64
+      connection_pool (>= 2.3.0)
+      logger
+      rack (>= 2.2.4)
+      redis-client (>= 0.22.2)
     solid_cable (4.1.0)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -408,7 +418,9 @@ DEPENDENCIES
   puma (>= 5.0)
   rack-cors
   rails (~> 8.1.4)
+  redis (~> 5.2)
   rubocop-rails-omakase
+  sidekiq (~> 7.3)
   solid_cable
   solid_cache
   solid_queue

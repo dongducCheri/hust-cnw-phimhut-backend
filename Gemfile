@@ -65,3 +65,6 @@ gem "dotenv-rails", groups: [:development, :test]
 
 #  (Cloudflare R2 / AWS S3)
 gem "aws-sdk-s3", require: false
+
+gem "sidekiq", "~> 7.3"
+gem "redis", "~> 5.2"
