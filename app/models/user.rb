@@ -9,4 +9,5 @@ class User < ApplicationRecord
 
   has_many :watchlists, dependent: :destroy
   has_many :watchlist_movies, through: :watchlists, source: :movie
+  has_many :comments, dependent: :destroy
 end

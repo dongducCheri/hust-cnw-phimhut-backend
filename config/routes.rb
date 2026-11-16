@@ -13,8 +13,10 @@ Rails.application.routes.draw do
     #Genres
       resources :genres, only: [:index, :show]
     
-    #Movies
-      resources :movies, only: [:index, :show]
+    #Movies & comments 
+      resources :movies, only: [:index, :show] do 
+        resources :comments, only: [:index, :create]
+      end
     
     #WatchLists 
       resources :watchlists, only: [:index, :create]
