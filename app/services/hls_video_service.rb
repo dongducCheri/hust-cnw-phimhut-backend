@@ -1,3 +1,4 @@
+require "digest"
 require "fileutils"
 # Chuyển .mp4 sáng HLS 
 # Tải dữ liệu lên Cloudflare R2 
@@ -28,9 +29,15 @@ class HlsVideoService
     hls_r2_prefix = "#{@r2_prefix}/hls"
     @storage.upload_directory(@hls_dir, hls_r2_prefix)
 
-    master_key = "#{hls_r2_prefix}/master.m3u8"
-    @episode.update!(object_key: master_key)
-    
+    master_key  = "#{hls_r2_prefix}/master.m3u8"
+    master_path = @hls_dir.join("master.m3u8")
+
+    @episode.attach_hls_master!(
+      master_key,
+      byte_size: File.size(master_path),
+      checksum: Digest::MD5.file(master_path).base64digest
+    )
+
     { success: true, video_key: master_key, stream_url: @episode.stream_url }
 
   ensure 
