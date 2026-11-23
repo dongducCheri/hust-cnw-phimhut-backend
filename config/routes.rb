@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
+
   namespace :api do
     namespace :v1 do
       get "test", to: "test#index"
@@ -9,17 +10,6 @@ Rails.application.routes.draw do
       post "login", to: "sessions#create"
       post "logout", to: "sessions#destroy"
       get "me", to: "sessions#me"
-
-    #Genres
-      resources :genres, only: [:index, :show]
-    
-    #Movies & comments 
-      resources :movies, only: [:index, :show] do 
-        resources :comments, only: [:index, :create]
-      end
-    
-    #WatchLists 
-      resources :watchlists, only: [:index, :create]
     end
   end
 end

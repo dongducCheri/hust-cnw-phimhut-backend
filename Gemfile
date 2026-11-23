@@ -47,24 +47,4 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-  gem 'pry-rails'
 end
-
-
-
-
-
-gem "pagy", "~> 9.4"
-
-gem "alba", "~> 4.0"
-
-# Gọi HTTP API bên ngoài
-gem "httparty", ">= 0.24.3"
-
-gem "dotenv-rails", groups: [:development, :test]
-
-#  (Cloudflare R2 / AWS S3)
-gem "aws-sdk-s3", require: false
-
-gem "sidekiq", "~> 7.3"
-gem "redis", "~> 5.2"

@@ -1,6 +1,0 @@
-:concurrency: 2
-:timeout: 25
-:queues:
-  - video_transcode
-  - default
-  - mailers
