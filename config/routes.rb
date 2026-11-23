@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     
     #Movies & comments 
       resources :movies, only: [:index, :show] do 
-        resources :comments, only: [:index, :create]
+        resources :comments, only: [:index, :create, :destroy], shallow: true 
       end
     
     #WatchLists 
