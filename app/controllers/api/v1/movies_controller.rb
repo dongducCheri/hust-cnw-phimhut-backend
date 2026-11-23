@@ -17,7 +17,7 @@ class Api::V1::MoviesController < Api::V1::BaseController
 
   # GET /api/v1/movies/:id
   def show
-    movie = Movie.includes(:genres, :episodes, movie_credits: :person).where(is_published: true).find_by(id: params[:id])
+    movie = Movie.includes(:genres, { episodes: { video_attachment: :blob } }, movie_credits: :person).where(is_published: true).find_by(id: params[:id])
     if movie 
       render json: MovieDetailSerializer.new(movie).serializable_hash, status: :ok
     else

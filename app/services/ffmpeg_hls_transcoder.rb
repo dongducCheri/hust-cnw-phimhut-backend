@@ -8,7 +8,8 @@ class FfmpegHlsTranscoder
     { name: "720p",  width: 1280, height: 720,  video_bitrate: "2500k", audio_bitrate: "128k", bandwidth: 2_628_000 },
     { name: "1080p", width: 1920, height: 1080, video_bitrate: "5000k", audio_bitrate: "192k", bandwidth: 5_192_000 }
   ].freeze
-
+  #width, height: Kích thước khung hình pixel, video/audio_bitrade: lượng dữ liệu truyền tải mỗi giây cho hình ảnh và âm thanh
+  
   def initialize(probe_service_class: VideoProbeService)
     @probe_service_class = probe_service_class
   end
