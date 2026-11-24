@@ -20,6 +20,9 @@ Rails.application.routes.draw do
     
     #WatchLists 
       resources :watchlists, only: [:index, :create]
+
+    get "episodes/:id/hls/master.m3u8", to: "hls#master"
+    get "episodes/:id/hls/:quality/index.m3u8", to: "hls#variant"
     end
   end
 end
