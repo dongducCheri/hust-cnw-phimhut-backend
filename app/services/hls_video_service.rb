@@ -7,13 +7,13 @@ require "fileutils"
 class HlsVideoService
    def initialize(episode, r2_raw_key = nil, storage: R2StorageService.new, transcoder: FfmpegHlsTranscoder.new)
     @episode    = episode
-    @r2_prefix  = "episodes/#{@episode.id}"
-    @r2_raw_key = r2_raw_key || "#{@r2_prefix}/raw/source.mp4"
-    @storage    = storage
-    @transcoder = transcoder
-    @work_dir = Rails.root.join("tmp", "video_processing", "episode_#{@episode.id}")
-    @raw_dir  = @work_dir.join("raw")
-    @hls_dir  = @work_dir.join("hls")
+    @r2_prefix  = "episodes/#{@episode.id}" # Thư mục gốc trên R2 (vd: episodes/66)
+    @r2_raw_key = r2_raw_key || "#{@r2_prefix}/raw/source.mp4" # Đường dẫn key của .mp4 trên R2 để tải về cắt 
+    @storage    = storage # Đối tườn R2StorageService, giao tiếp với R2, tải .mp4 về và đẩy lên /hls 
+    @transcoder = transcoder # Gọi ffprobe và ffmpeg 
+    @work_dir = Rails.root.join("tmp", "video_processing", "episode_#{@episode.id}") # Thư mục tmp trên máy
+    @raw_dir  = @work_dir.join("raw") # Thư mục con trong work_dir để chưa .mp4 từ R2 về
+    @hls_dir  = @work_dir.join("hls")  # Thư mục con trong work_dir để chứa .ts từ R2 về
   end
 
 

@@ -35,8 +35,8 @@ class R2StorageService
     Dir.glob(base_dir.join("**", "*")).each do |file_path|
       next unless File.file?(file_path)
 
-      relative_path = Pathname.new(file_path).relative_path_from(base_dir).to_s
-      r2_key = "#{r2_prefix}/#{relative_path}"
+      relative_path = Pathname.new(file_path).relative_path_from(base_dir).to_s # Lấy filepath - basedir =  C:/.../episode_66/hls/360p/index.m3u8 - C:/.../episode_66/hls = 360p/index.m3u8 
+      r2_key = "#{r2_prefix}/#{relative_path}" # episodes/66/hls + 360p/index.m3u8
       content_type = file_path.end_with?(".m3u8") ? "application/vnd.apple.mpegurl" : "video/mp2t"
 
       File.open(file_path, "rb") do |file|
