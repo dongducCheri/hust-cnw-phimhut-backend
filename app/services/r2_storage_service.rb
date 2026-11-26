@@ -2,6 +2,7 @@ require "aws-sdk-s3"
 require "pathname"
 
 class R2StorageService
+  DEFAULT_EXPIRES_IN = 18_000 # 5h
   def initialize(
     access_key_id: ENV.fetch("R2_ACCESS_KEY_ID"),
     secret_access_key: ENV.fetch("R2_SECRET_ACCESS_KEY"),
@@ -13,12 +14,15 @@ class R2StorageService
       access_key_id: access_key_id,
       secret_access_key: secret_access_key,
       endpoint: endpoint,
-      region: "auto"
+      region: "auto",
+      force_path_style: true
     )
+    @presigner = Aws::S3::Presigner.new(client: @client)
   end
 
   def download_file(key, destination_path)
     Rails.logger.info "[R2] Đang tải video gốc từ key '#{key}' về #{destination_path}..."
+    # get_object: tải, đọc dữ liệu của một file cụ thể từ bucket 
     @client.get_object(
       bucket: @bucket_name,
       key: key,
@@ -50,4 +54,21 @@ class R2StorageService
       Rails.logger.info "[R2] Đã tải lên: #{r2_key}"
     end
   end
+
+  def get_object_body(key)
+    @client.get_object(bucket: @bucket_name, key: key).body.read.force_encoding("UTF-8")
+    # .body.read trả về ASCOO-8BIT (Binary), tránh CompatibilityError khi xử lý chuỗi, chuẩn file .m3u8 sử dụng bảng mã UTF-8
+  end
+
+  def presigned_get_url(key, expires_in: DEFAULT_EXPIRES_IN)
+    # key: đường dẫn file muốn tạo link trên R2
+    # presigned_url: hàm có sẵn của Aws sdk, truyền vào 4 tham số như dưới, :get_object là hành động được cấp phép, đường link chỉ để xem (GET)
+    @presigner.presigned_url(
+      :get_object,
+      bucket: @bucket_name,
+      key: key,
+      expires_in: expires_in
+    )
+  end
+
 end

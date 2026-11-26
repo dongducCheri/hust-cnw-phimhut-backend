@@ -13,9 +13,9 @@ class Episode < ApplicationRecord
   end
 
   # trả về link HTTPS đầy đủ 
-  def stream_url 
+  def stream_url
     return nil if object_key.blank?
-    "#{ENV.fetch('R2_PUBLIC_URL')}/#{object_key}"
+    "/episodes/#{id}/hls/master.m3u8"
   end
 
   # Gắn file master.m3u8 đã upload trên R2 vào Active Storage (:video)
